@@ -1,0 +1,88 @@
+
+<!DOCTYPE html>
+<html lang="te">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Cinema Studio</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#101014;color:white;font-family:Arial,sans-serif;padding:18px}
+header{color:#e8bd68;font-size:22px;font-weight:bold;margin:12px 0 25px}
+h1{font-size:30px;color:#f1cc80}
+p{color:#bbb;line-height:1.5}
+label{display:block;margin:18px 0 8px}
+input,textarea,select{width:100%;padding:14px;background:#24242c;color:white;border:1px solid #49434a;border-radius:10px;font-size:16px}
+textarea{min-height:145px;resize:vertical}
+button{width:100%;padding:15px;border:0;border-radius:10px;background:#c69a4d;color:#17130d;font-size:16px;font-weight:bold;margin-top:15px}
+.panel{background:#1b1a20;padding:16px;border-radius:14px;margin-top:20px}
+#output{white-space:pre-wrap;line-height:1.6;color:#eee}
+.small{font-size:12px;color:#999}
+</style>
+</head>
+<body>
+<header>🎬 AI CINEMA STUDIO</header>
+<h1>Create Your Movie</h1>
+<p>Transform your Telugu story into cinematic scenes.</p>
+
+<div class="panel">
+<label>Movie Name</label>
+<input id="movie" placeholder="Enter movie name">
+
+<label>Your Story</label>
+<textarea id="story" placeholder="Mee Telugu movie story ikkada rayandi... Prathi scene ni separate paragraph lo rayandi."></textarea>
+
+<label>Video Format</label>
+<select id="format">
+<option>16:9 YouTube Movie</option>
+<option>9:16 YouTube Shorts</option>
+</select>
+
+<button onclick="createScenes()">CREATE MOVIE SCENES ✨</button>
+</div>
+
+<div class="panel">
+<h3>🎥 Your Scene Prompts</h3>
+<div id="output">Mee story enter chesi Create Movie Scenes click cheyyandi.</div>
+<button onclick="copyPrompts()">COPY ALL PROMPTS</button>
+<button onclick="downloadPrompts()">DOWNLOAD PROMPTS</button>
+<p class="small">Free starter version. Actual AI video generation will need a connected video model.</p>
+</div>
+
+<script>
+let result = "";
+
+function createScenes(){
+ const name=document.getElementById("movie").value.trim() || "My Movie";
+ const story=document.getElementById("story").value.trim();
+ const format=document.getElementById("format").value;
+ if(!story){alert("Please enter your story");return;}
+ const scenes=story.split(/\n\s*\n/).filter(s=>s.trim());
+ result="MOVIE: "+name+"\nFORMAT: "+format+"\n\n";
+ scenes.forEach((scene,i)=>{
+ result+="SCENE "+(i+1)+"\n";
+ result+="STORY: "+scene.trim()+"\n";
+ result+="VIDEO PROMPT: Cinematic Telugu movie scene, realistic Indian characters, dramatic lighting, detailed environment, professional camera movement, natural expressions, high quality filmmaking. Scene action: "+scene.trim()+"\n\n";
+ });
+ document.getElementById("output").textContent=result;
+}
+
+function copyPrompts(){
+ if(!result){alert("First create your scenes");return;}
+ if(navigator.clipboard){
+ navigator.clipboard.writeText(result).then(()=>alert("Prompts copied!"));
+ }else{alert("Clipboard not supported. Use Download Prompts.");}
+}
+
+function downloadPrompts(){
+ if(!result){alert("First create your scenes");return;}
+ const blob=new Blob([result],{type:"text/plain"});
+ const a=document.createElement("a");
+ a.href=URL.createObjectURL(blob);
+ a.download="AI-Cinema-Scenes.txt";
+ a.click();
+ URL.revokeObjectURL(a.href);
+}
+</script>
+</body>
+</html>
